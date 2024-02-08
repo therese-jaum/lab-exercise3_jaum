@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="index.php">
+    <link rel="stylesheet" href="index.html">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -49,8 +49,17 @@
                     </div>
                 </form>
             </article>
-        </section>
-
+            <?php if (!empty($_POST) && isset($_POST['submit'])) { ?>
+    <div class="result">
+        <b>Values returned by the form:</b><br>
+        <ul>
+            <?php foreach ($_POST as $key => $value) {
+                echo '<li>' . $key . ' =>' . $value . '</li>';
+            } ?>
+        </ul>
+    </div>
+<?php } ?>
+ <!-- PART 2-->
         <hr>
         <section>
             <aside>
@@ -71,22 +80,24 @@
                 <form action="index.php" method="post" class="form-element" enctype="multipart/form-data">
                     <div class="form-element-div">
                         <span>
-
+                           
                             <label for="Gender">Enter your <b>Gender:</b></label><text>*</text>
                             <input type="radio" name="gender" value="M" id="id5" required>
                             <label for="male">Male</label>
                             <input type="radio" name="gender" value="F" required>
                             <label for="female">Female</label><br><br>
 
+                     
                             <label for="Lastname">Enter your <b>Lastname:</b></label><text>*</text>
                             <input type="text" name="lastname" id="id6" required><br><br>
                             <label for="Firstname">Enter your <b>Firstname:</b></label>
                             <input type="text" name="firstname" id="id7"><br><br>
 
+                        
                             <label for="Date">Enter your <b>Date of Birth:</b></label>
                             <input type="date" name="dob" id="id8" ><br><br>
 
-                          
+                            
                             <label for="File">Enter your <b>Photo:</b></label>
                             <input type="file" id="id9" name="myfile"><br><br>
 
@@ -99,6 +110,7 @@
                             <input type="password" id="id12" required><br><br>
                             <text>*mandatory field</text><br>
 
+                           
                             <input type="checkbox" name="tos" id="id13" required>
                             <label for="cb">Accept TOS</label><br><br>
 
@@ -107,8 +119,51 @@
                     </div>
                 </form>
             </article>
-        </section>
+            <div class="results">
+            <?php
+           
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+             
+                $gender = $_POST['gender'] ?? '';
+                $lastname = $_POST['lastname'] ?? '';
+                $firstname = $_POST['firstname'] ?? '';
+                $dob = $_POST['dob'] ?? '';
+                $email = $_POST['email'] ?? '';
+                $password = $_POST['password'] ?? '';
+               
+                $tosAccepted = isset($_POST['tos']) ? 'Ok' : 'Not Ok'; 
+                $reg = $_POST['reg'] ?? '';
 
+              
+                echo "<h4>Values returned by the form:</h4>";
+                echo "<ul>";
+                echo "<li>Gender => $gender</li>";
+                echo "<li>Lastname => $lastname</li>";
+                echo "<li>Firstname => $firstname</li>";
+                echo "<li>Date of Birth => $dob</li>";
+                echo "<li>Email address => $email</li>";
+                echo "<li>Password => $password</li>";
+                echo "<li>Accept TOS => $tosAccepted</li>";
+                echo "<li>Contact => $reg</li>";
+                echo "</ul>";
+            }
+            ?>
+            </div>   
+            <?php
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['myfile']) && $_FILES['myfile']['error'] === UPLOAD_ERR_OK) {            
+                $target_dir = "files uploaded/";
+                $tmp_name = $_FILES['myfile']['tmp_name'];
+                $target_file = $target_dir . uniqid() . '_' . basename($_FILES['myfile']['name']);
+                if (move_uploaded_file($tmp_name, $target_file)) {
+                    echo '<h4>Image preview:</h4>';
+                    echo '<img src="' . $target_file . '" alt="Uploaded Image" >';
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+            ?>
+        </section>
+         <!--PART 3-->
         <hr>
         <section>
             <aside>
@@ -127,14 +182,13 @@
                 <form action="index.php" method="post" class="form-element">
                     <div class="form-element-div">
                         <span>
-                           
                             <label>Department you wish to contact:</label><text>*</text>
                             <select name="department" id="num4">
                                 <option value="sales">Sales Department</option>
                                 <option value="comm">Communication Department</option>
                                 <option value="tech">Technical Department</option>
                             </select><br><br>
-  
+
                             <label class="textlbl">Enter a <strong>Title:</strong></label><text>*</text>
                             <input type="text" id="num3" name="title" placeholder="More than 20 characters" minlength="20" required><br><br>
 
@@ -151,7 +205,26 @@
             </article>
         </section>
         
-        <div class="results">
+        <div class="results">   
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                $department = $_POST['department'] ?? '';
+                $title = $_POST['title'] ?? '';
+                $comment = $_POST['comment'] ?? '';
+                $mail2 = $_POST['mail2'] ?? '';
+                $contact = $_POST['contact'] ?? '';
+
+                echo "<h4>Values returned by the form:</h4>";
+                echo "<ul>";
+                echo "<li>Department => $department</li>";
+                echo "<li>Title => $title</li>";
+                echo "<li>Question => $comment</li>";
+                echo "<li>Email => $mail2</li>";
+                echo "<li>Contact => $contact</li>";
+                echo "</ul>";
+            }
+            ?>
         </div>
         
     </div>
